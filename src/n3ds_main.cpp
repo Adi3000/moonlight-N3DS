@@ -260,6 +260,7 @@ static void prompt_for_stream_settings(PCONFIGURATION config) {
         "hwdecode",
         "swapfacebuttons",
         "swaptriggersandshoulders",
+        "mpegcodec",
         "debug",
     };
     int idx = 0;
@@ -322,6 +323,10 @@ static void prompt_for_stream_settings(PCONFIGURATION config) {
             config->swap_triggers_and_shoulders = prompt_for_boolean(
                 "Swaps L/ZL and R/ZR for a more natural feel",
                 config->swap_triggers_and_shoulders);
+        } else if ("mpegcodec" == setting_names[idx]) {
+            config->mpeg_codec = prompt_for_boolean(
+                "Does stream has to be in MPEG (recommanded for 3DS)",
+                config->mpeg_codec);
         } else if ("debug" == setting_names[idx]) {
             config->debug_level =
                 prompt_for_boolean("Enable debug logs", config->debug_level);
@@ -456,12 +461,12 @@ static void stream(PSERVER_DATA server, PCONFIGURATION config, int appId) {
     printf(
         "Loading...\nStream %dx%d, %dfps, %dkbps, sops=%d, localaudio=%d, quitappafter=%d,\
  viewonly=%d, rotate=%d, encryption=%x, hwdecode=%d, swapfacebuttons=%d, swaptriggersandshoulders=%d,\
- display_type=%d, motion_controls=%d, debug=%d\n",
+ mpegcodec=%d, display_type=%d, motion_controls=%d, debug=%d\n",
         config->stream.width, config->stream.height, config->stream.fps,
         config->stream.bitrate, config->sops, config->localaudio,
         config->quitappafter, config->viewonly, config->rotate,
         config->stream.encryptionFlags, config->hwdecode,
-        config->swap_face_buttons, config->swap_triggers_and_shoulders,
+        config->swap_face_buttons, config->swap_triggers_and_shoulders, config->mpeg_codec, 
         config->display_type, config->motion_controls, config->debug_level);
 
     int status = LiStartConnection(&server->serverInfo, &config->stream,
@@ -550,9 +555,14 @@ int main_loop(int argc, char *argv[]) {
                     continue;
                 }
 
-                config.stream.supportedVideoFormats = VIDEO_FORMAT_H264;
-
                 consoleClear();
+
+                if (config.mpeg_codec) {
+                    config.stream.supportedVideoFormats = VIDEO_FORMAT_MPEG2;
+                } else {
+                    config.stream.supportedVideoFormats = VIDEO_FORMAT_H264;
+                }
+                printf("Has choosen codec code %x due to %x", config.stream.supportedVideoFormats, config.codec);
                 N3dsTouchType touch_type = DISABLED;
                 if (config.debug_level) {
                     consoleInit(GFX_BOTTOM, &bottomScreen);

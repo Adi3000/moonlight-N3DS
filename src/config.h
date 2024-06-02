@@ -60,6 +60,7 @@ typedef struct _CONFIGURATION {
   bool motion_controls;
   bool swap_face_buttons;
   bool swap_triggers_and_shoulders;
+  bool mpeg_codec;
 } CONFIGURATION, *PCONFIGURATION;
 
 extern bool inputAdded;

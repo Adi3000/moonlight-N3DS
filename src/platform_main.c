@@ -233,6 +233,8 @@ bool platform_prefers_codec(enum platform system, enum codecs codec) {
     return false;
   case CODEC_AV1:
     return false;
+  case CODEC_MPEG:
+    return false;
   default:
     break;
   }

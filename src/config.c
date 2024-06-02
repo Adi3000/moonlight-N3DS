@@ -406,6 +406,7 @@ void config_save(char* filename, PCONFIGURATION config) {
   write_config_bool(fd, "hwdecode", config->hwdecode);
   write_config_bool(fd, "swapfacebuttons", config->swap_face_buttons);
   write_config_bool(fd, "swaptriggersandshoulders", config->swap_triggers_and_shoulders);
+  write_config_bool(fd, "mpegcodec", config->mpeg_codec);
   write_config_bool(fd, "debug", config->debug_level);
   write_config_int(fd, "display_type", config->display_type);
   write_config_bool(fd, "motion_controls", config->motion_controls);

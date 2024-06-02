@@ -327,12 +327,15 @@ int main(int argc, char* argv[]) {
       if (config.hdr)
         config.stream.supportedVideoFormats |= VIDEO_FORMAT_H265_MAIN10;
     }
+    if (config.codec == CODEC_MPEG || (config.codec == CODEC_UNSPECIFIED && platform_prefers_codec(system, CODEC_MPEG))) {
+      config.stream.supportedVideoFormats |= VIDEO_FORMAT_MPEG2;
+    }
     if (config.codec == CODEC_AV1 || (config.codec == CODEC_UNSPECIFIED && platform_prefers_codec(system, CODEC_AV1))) {
       config.stream.supportedVideoFormats |= VIDEO_FORMAT_AV1_MAIN8;
       if (config.hdr)
         config.stream.supportedVideoFormats |= VIDEO_FORMAT_AV1_MAIN10;
     }
-
+    printf("Has choosen codec code %x", config.stream.supportedVideoFormats);
     if (config.hdr && !(config.stream.supportedVideoFormats & VIDEO_FORMAT_MASK_10BIT)) {
       fprintf(stderr, "HDR streaming requires HEVC or AV1 codec\n");
       exit(-1);

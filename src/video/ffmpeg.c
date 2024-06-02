@@ -62,7 +62,10 @@ int ffmpeg_init(int videoFormat, int width, int height, int perf_lvl, int buffer
   ffmpeg_decoder = perf_lvl & VAAPI_ACCELERATION ? VAAPI : SOFTWARE;
 
   for (int try = 0; try < 6; try++) {
-    if (videoFormat & VIDEO_FORMAT_MASK_H264) {
+    if (videoFormat & VIDEO_FORMAT_MASK_MPEG) {
+        if (try == 0) decoder = avcodec_find_decoder_by_name("mpeg2_v4l2m2m") ;
+        if (try == 1) decoder = avcodec_find_decoder_by_name("mpeg2video") ;
+    }else if (videoFormat & VIDEO_FORMAT_MASK_H264) {
       if (ffmpeg_decoder == SOFTWARE) {
         if (try == 0) decoder = avcodec_find_decoder_by_name("h264_nvv4l2"); // Tegra
         if (try == 1) decoder = avcodec_find_decoder_by_name("h264_nvmpi"); // Tegra
